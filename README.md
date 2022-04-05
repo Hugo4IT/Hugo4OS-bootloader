@@ -1,3 +1,9 @@
+An edited version of [rust-osdev/bootloader](https://github.com/rust-osdev/bootloader) to add SSE/SIMD (super fast accelerated floating point math) support, with probably more stuff to come.
+
+A lot of things like examples, tests and configurations have been removed, as this repo is only intended as a submodule for [Hugo4OS](https://github.com/Hugo4IT/Hugo4OS), not for distributing as a library/crate by itself.
+
+Original README.md:
+
 # bootloader
 
 [![Docs](https://docs.rs/bootloader/badge.svg)](https://docs.rs/bootloader)
