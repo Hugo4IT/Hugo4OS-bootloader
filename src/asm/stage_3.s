@@ -15,6 +15,7 @@ stage_3:
 check_cpu:
     call check_cpuid
     call check_long_mode
+    call check_and_enable_sse
 
     cli                   # disable interrupts
 
@@ -146,6 +147,29 @@ no_long_mode_spin:
     hlt
     jmp no_long_mode_spin
 
+# Source: https://wiki.osdev.org/SSE
+check_and_enable_sse:
+    # Check for SSE support (accelerated floating point math, software math is incredibly slow)
+    mov eax, 0x1
+    cpuid
+    test edx, (1 << 25)
+    jz no_sse
+
+    # If SSE is supported, enable it
+    mov eax, cr0
+    and ax, 0xFFFB      # clear coprocessor emulation CR0.EM
+    or ax, 0x2          # set coprocessor monitoring  CR0.MP
+    mov cr0, eax
+    mov eax, cr4
+    or ax, (3 << 9)     # set CR4.OSFXSR and CR4.OSXMMEXCPT at the same time
+    mov cr4, eax
+    ret
+no_sse:
+    mov esi, offset no_sse_str
+    call vga_println
+no_sse_spin:
+    hlt
+    jmp no_sse_spin
 
 .align 4
 zero_idt:
@@ -166,3 +190,4 @@ gdt_64_pointer:
 
 no_cpuid_str: .asciz "Error: CPU does not support CPUID"
 no_long_mode_str: .asciz "Error: CPU does not support long mode"
+no_sse_str: .asciz "Error: CPU does not support SSE/SIMD"

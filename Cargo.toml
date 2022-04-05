@@ -8,19 +8,6 @@ repository = "https://github.com/rust-osdev/bootloader"
 edition = "2018"
 build = "build.rs"
 
-[workspace]
-members = [
-    "tests/runner",
-    "tests/test_kernels/default_settings",
-    "tests/test_kernels/map_phys_mem",
-    "tests/test_kernels/higher_half",
-    "tests/test_kernels/pie",
-]
-exclude = [
-    "examples/basic",
-    "examples/test_framework",
-]
-
 [[bin]]
 name = "builder"
 required-features = ["builder"]
@@ -78,22 +65,3 @@ binary = [
     "spinning_top", "serde", "noto-sans-mono-bitmap", "quote", "proc-macro2", "raw-cpuid", "rand",
     "rand_chacha"
 ]
-
-[profile.dev]
-panic = "abort"
-
-[profile.release]
-panic = "abort"
-lto = false
-debug = true
-overflow-checks = true
-
-[package.metadata.docs.rs]
-default-target = "x86_64-unknown-linux-gnu"
-
-[package.metadata.release]
-no-dev-version = true
-pre-release-replacements = [
-    { file="Changelog.md", search="# Unreleased", replace="# Unreleased\n\n# {{version}} – {{date}}", exactly=1 },
-]
-pre-release-commit-message = "Release version {{version}}"
